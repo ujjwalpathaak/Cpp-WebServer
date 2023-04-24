@@ -1,6 +1,6 @@
 # Use an official Ubuntu base image
-FROM debian:latest
-
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
+LABEL maintainer="jshelton@contoso.com"
 # Set the working directory to /app
 WORKDIR /app
 
@@ -8,6 +8,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     g++ \
     make \
+    mingw-w64 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the C++ web server code into the container
