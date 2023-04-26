@@ -3,6 +3,25 @@
 using namespace std;
 
 #pragma comment(lib, "ws2_32.lib")
+map<string, string> cache;
+
+// void killPort(int port) {
+//     // Find the PID of the process using the port
+//     string command = "netstat -ano | findstr :"+to_string(port);
+//     string output = "";
+//     FILE* pipe = _popen(command.c_str(), "r");
+//     char buffer[128];
+//     while (fgets(buffer, sizeof(buffer), pipe) != NULL) {
+//         output += buffer;
+//     }
+//     _pclose(pipe);
+//     size_t pos = output.find_last_of(" ");
+//     int pid = stoi(output.substr(pos+1));
+
+//     // Terminate the process
+//     command = "taskkill /pid "+to_string(pid)+" /f";
+//     system(command.c_str());
+// }
 
 void handleClient(SOCKET clientSocket)
 {
@@ -25,14 +44,25 @@ void handleClient(SOCKET clientSocket)
         token = strtok(NULL, " ");
         if (token != NULL)
         {
-            if (strcmp(token, "/") == 0)
+            string resource(token);
+            if (resource == "/")
             {
-                string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-                string htmlData = "";
-                ifstream MyFile("index.html");
-                while (getline(MyFile, htmlData))
+                string response;
+                if (cache.count(resource) > 0)
                 {
-                    response = response.append(htmlData);
+                    // Serve cached response
+                    response = cache[resource];
+                }
+                else
+                {
+                    response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+                    string htmlData = "";
+                    ifstream MyFile("index.html");
+                    while (getline(MyFile, htmlData))
+                    {
+                        response = response.append(htmlData);
+                    }
+                    cache[resource] = response;
                 }
                 cout << response;
                 iResult = send(clientSocket, response.c_str(), response.length(), 0);
@@ -42,14 +72,24 @@ void handleClient(SOCKET clientSocket)
                 }
                 cout << "Response sent" << endl;
             }
-            if (strcmp(token, "/file1") == 0)
+            if (resource == "/file1")
             {
-                string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-                string htmlData = "";
-                ifstream MyFile("file1.html");
-                while (getline(MyFile, htmlData))
+                string response;
+                if (cache.count(resource) > 0)
                 {
-                    response = response.append(htmlData);
+                    // Serve cached response
+                    response = cache[resource];
+                }
+                else
+                {
+                    response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+                    string htmlData = "";
+                    ifstream MyFile("file1.html");
+                    while (getline(MyFile, htmlData))
+                    {
+                        response = response.append(htmlData);
+                    }
+                    cache[resource] = response;
                 }
                 cout << response;
                 iResult = send(clientSocket, response.c_str(), response.length(), 0);
@@ -59,14 +99,24 @@ void handleClient(SOCKET clientSocket)
                 }
                 cout << "Response sent" << endl;
             }
-            else if (strcmp(token, "/file2") == 0)
+            else if (resource == "/file2")
             {
-                string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-                string htmlData = "";
-                ifstream MyFile("file2.html");
-                while (getline(MyFile, htmlData))
+                string response;
+                if (cache.count(resource) > 0)
                 {
-                    response = response.append(htmlData);
+                    // Serve cached response
+                    response = cache[resource];
+                }
+                else
+                {
+                    response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+                    string htmlData = "";
+                    ifstream MyFile("file2.html");
+                    while (getline(MyFile, htmlData))
+                    {
+                        response = response.append(htmlData);
+                    }
+                    cache[resource] = response;
                 }
                 cout << response;
                 iResult = send(clientSocket, response.c_str(), response.length(), 0);
@@ -76,14 +126,24 @@ void handleClient(SOCKET clientSocket)
                 }
                 cout << "Response sent" << endl;
             }
-            else if (strcmp(token, "/file3") == 0)
+            else if (resource == "/file3")
             {
-                string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-                string htmlData = "";
-                ifstream MyFile("file3.html");
-                while (getline(MyFile, htmlData))
+                string response;
+                if (cache.count(resource) > 0)
                 {
-                    response = response.append(htmlData);
+                    // Serve cached response
+                    response = cache[resource];
+                }
+                else
+                {
+                    response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+                    string htmlData = "";
+                    ifstream MyFile("file3.html");
+                    while (getline(MyFile, htmlData))
+                    {
+                        response = response.append(htmlData);
+                    }
+                    cache[resource] = response;
                 }
                 cout << response;
                 iResult = send(clientSocket, response.c_str(), response.length(), 0);
@@ -92,11 +152,25 @@ void handleClient(SOCKET clientSocket)
                     cout << "send failed: " << WSAGetLastError() << endl;
                 }
                 cout << "Response sent" << endl;
+            }
+            else if (resource == "/exit")
+            {
+                    string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+                    string htmlData = "";
+                    ifstream MyFile("exit.html");
+                    while (getline(MyFile, htmlData))
+                    {
+                        response = response.append(htmlData);
+                    }
+                    iResult = send(clientSocket, response.c_str(), response.length(), 0);
             }
         }
     }
     closesocket(clientSocket);
+    
+
 }
+
 
 void errorHandling()
 {
@@ -180,7 +254,7 @@ private:
     void initialize();
     void bindAndListen();
     void acceptConnections();
-    void processClient(SOCKET clientSocket);
+    // void processClient(SOCKET clientSocket);
     void sendResponse(SOCKET clientSocket, const string &response);
 };
 
@@ -303,120 +377,120 @@ void WebServer::acceptConnections()
     }
 }
 
-void WebServer::processClient(SOCKET clientSocket)
-{
-    char buffer[1024];
-    int iResult = recv(clientSocket, buffer, sizeof(buffer), 0);
-    if (iResult == SOCKET_ERROR)
-    {
-        cout << "recv failed: " << WSAGetLastError() << endl;
-        closesocket(clientSocket);
-        return;
-    }
+// void WebServer::processClient(SOCKET clientSocket)
+// {
+//     char buffer[1024];
+//     int iResult = recv(clientSocket, buffer, sizeof(buffer), 0);
+//     if (iResult == SOCKET_ERROR)
+//     {
+//         cout << "recv failed: " << WSAGetLastError() << endl;
+//         closesocket(clientSocket);
+//         return;
+//     }
 
-    buffer[iResult] = '\0';
+//     buffer[iResult] = '\0';
 
-    cout << "Received data: " << iResult << endl;
+//     cout << "Received data: " << iResult << endl;
 
-    char *token = strtok(buffer, " ");
-    if (token != NULL)
-    {
-        token = strtok(NULL, " ");
-        if (token != NULL)
-        {
-            if (strcmp(token, "/") == 0)
-            {
-                string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-                string htmlData = "";
-                ifstream MyFile("index.html");
-                while (getline(MyFile, htmlData))
-                {
-                    response = response.append(htmlData);
-                }
-                cout << response;
-                iResult = send(clientSocket, response.c_str(), response.length(), 0);
-                if (iResult == SOCKET_ERROR)
-                {
-                    cout << "send failed: " << WSAGetLastError() << endl;
-                }
-                cout << "Response sent" << endl;
-            }
-            if (strcmp(token, "/file1") == 0)
-            {
-                string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-                string htmlData = "";
-                ifstream MyFile("file1.html");
-                while (getline(MyFile, htmlData))
-                {
-                    response = response.append(htmlData);
-                }
-                cout << response;
-                iResult = send(clientSocket, response.c_str(), response.length(), 0);
-                if (iResult == SOCKET_ERROR)
-                {
-                    cout << "send failed: " << WSAGetLastError() << endl;
-                }
-                cout << "Response sent" << endl;
-            }
-            else if (strcmp(token, "/file2") == 0)
-            {
-                string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-                string htmlData = "";
-                ifstream MyFile("file2.html");
-                while (getline(MyFile, htmlData))
-                {
-                    response = response.append(htmlData);
-                }
-                cout << response;
-                iResult = send(clientSocket, response.c_str(), response.length(), 0);
-                if (iResult == SOCKET_ERROR)
-                {
-                    cout << "send failed: " << WSAGetLastError() << endl;
-                }
-                cout << "Response sent" << endl;
-            }
-            else if (strcmp(token, "/file3") == 0)
-            {
-                string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-                string htmlData = "";
-                ifstream MyFile("file3.html");
-                while (getline(MyFile, htmlData))
-                {
-                    response = response.append(htmlData);
-                }
-                cout << response;
-                iResult = send(clientSocket, response.c_str(), response.length(), 0);
-                if (iResult == SOCKET_ERROR)
-                {
-                    cout << "send failed: " << WSAGetLastError() << endl;
-                }
-                cout << "Response sent" << endl;
-            }
-        }
-    }
+//     char *token = strtok(buffer, " ");
+//     if (token != NULL)
+//     {
+//         token = strtok(NULL, " ");
+//         if (token != NULL)
+//         {
+//             if (strcmp(token, "/") == 0)
+//             {
+//                 string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+//                 string htmlData = "";
+//                 ifstream MyFile("index.html");
+//                 while (getline(MyFile, htmlData))
+//                 {
+//                     response = response.append(htmlData);
+//                 }
+//                 cout << response;
+//                 iResult = send(clientSocket, response.c_str(), response.length(), 0);
+//                 if (iResult == SOCKET_ERROR)
+//                 {
+//                     cout << "send failed: " << WSAGetLastError() << endl;
+//                 }
+//                 cout << "Response sent" << endl;
+//             }
+//             if (strcmp(token, "/file1") == 0)
+//             {
+//                 string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+//                 string htmlData = "";
+//                 ifstream MyFile("file1.html");
+//                 while (getline(MyFile, htmlData))
+//                 {
+//                     response = response.append(htmlData);
+//                 }
+//                 cout << response;
+//                 iResult = send(clientSocket, response.c_str(), response.length(), 0);
+//                 if (iResult == SOCKET_ERROR)
+//                 {
+//                     cout << "send failed: " << WSAGetLastError() << endl;
+//                 }
+//                 cout << "Response sent" << endl;
+//             }
+//             else if (strcmp(token, "/file2") == 0)
+//             {
+//                 string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+//                 string htmlData = "";
+//                 ifstream MyFile("file2.html");
+//                 while (getline(MyFile, htmlData))
+//                 {
+//                     response = response.append(htmlData);
+//                 }
+//                 cout << response;
+//                 iResult = send(clientSocket, response.c_str(), response.length(), 0);
+//                 if (iResult == SOCKET_ERROR)
+//                 {
+//                     cout << "send failed: " << WSAGetLastError() << endl;
+//                 }
+//                 cout << "Response sent" << endl;
+//             }
+//             else if (strcmp(token, "/file3") == 0)
+//             {
+//                 string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+//                 string htmlData = "";
+//                 ifstream MyFile("file3.html");
+//                 while (getline(MyFile, htmlData))
+//                 {
+//                     response = response.append(htmlData);
+//                 }
+//                 cout << response;
+//                 iResult = send(clientSocket, response.c_str(), response.length(), 0);
+//                 if (iResult == SOCKET_ERROR)
+//                 {
+//                     cout << "send failed: " << WSAGetLastError() << endl;
+//                 }
+//                 cout << "Response sent" << endl;
+//             }
+//         }
+//     }
 
-    closesocket(clientSocket);
-}
+//     closesocket(clientSocket);
+// }
 
-void WebServer::sendResponse(SOCKET clientSocket, const string &response)
-{
-    try
-    {
-        int iResult = send(clientSocket, response.c_str(), static_cast<int>(response.length()), 0);
-        if (iResult == SOCKET_ERROR)
-        {
-            cout << "send failed: ";
-            errorHandling();
-            closesocket(clientSocket);
-        }
-    }
-    catch (const exception &e)
-    {
-        cout << e.what() << endl;
-        WSACleanup();
-        exit(1);
-    }
-}
+// void WebServer::sendResponse(SOCKET clientSocket, const string &response)
+// {
+//     try
+//     {
+//         int iResult = send(clientSocket, response.c_str(), static_cast<int>(response.length()), 0);
+//         if (iResult == SOCKET_ERROR)
+//         {
+//             cout << "send failed: ";
+//             errorHandling();
+//             closesocket(clientSocket);
+//         }
+//     }
+//     catch (const exception &e)
+//     {
+//         cout << e.what() << endl;
+//         WSACleanup();
+//         exit(1);
+//     }
+// }
 
 int main()
 {
