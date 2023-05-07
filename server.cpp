@@ -1,5 +1,8 @@
 #include <bits/stdc++.h>
 #include <winsock2.h>
+// #include "211117.h"
+// #include "211418.h"
+// #include "211105.h"
 
 using namespace std;
 
@@ -9,146 +12,146 @@ map<string, string> cache;
 class CClient
 {
 public:
-    virtual void handleClient(SOCKET clientSocket, int iResult, string resource) = 0;
+    virtual void handleClient(SOCKET clientSocket, int iResult, string strResource) = 0;
 };
 
 class Home : public CClient
 {
 public:
-    void handleClient(SOCKET clientSocket, int iResult, string resource)
+    void handleClient(SOCKET clientSocket, int iResult, string strResource) override
     {
-        string response;
-        if (cache.count(resource) > 0)
+        string strResponse;
+        if (cache.count(strResource) > 0)
         {
-            response = cache[resource];
+            strResponse = cache[strResource];
         }
         else
         {
-            response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-            string htmlData = "";
+            strResponse = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+            string strHTMLData = "";
             ifstream MyFile("index.html");
-            while (getline(MyFile, htmlData))
+            while (getline(MyFile, strHTMLData))
             {
-                response = response.append(htmlData);
+                strResponse = strResponse.append(strHTMLData);
             }
-            cache[resource] = response;
+            cache[strResource] = strResponse;
         }
 
-        iResult = send(clientSocket, response.c_str(), response.length(), 0);
+        iResult = send(clientSocket, strResponse.c_str(), strResponse.length(), 0);
 
         if (iResult == SOCKET_ERROR)
         {
             cout << "send failed: " << WSAGetLastError() << endl;
         }
-        cout << "Response sent" << endl;
+        cout << "strResponse sent" << endl;
     }
 };
 
 class CFile1 : public CClient
 {
 public:
-    void handleClient(SOCKET clientSocket, int iResult, string resource)
+    void handleClient(SOCKET clientSocket, int iResult, string strResource) override
     {
-        string response;
-        if (cache.count(resource) > 0)
+        string strResponse;
+        if (cache.count(strResource) > 0)
         {
-            response = cache[resource];
+            strResponse = cache[strResource];
         }
         else
         {
-            response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-            string htmlData = "";
+            strResponse = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+            string strHTMLData = "";
             ifstream MyFile("file1.html");
-            while (getline(MyFile, htmlData))
+            while (getline(MyFile, strHTMLData))
             {
-                response = response.append(htmlData);
+                strResponse = strResponse.append(strHTMLData);
             }
-            cache[resource] = response;
+            cache[strResource] = strResponse;
         }
-        iResult = send(clientSocket, response.c_str(), response.length(), 0);
+        iResult = send(clientSocket, strResponse.c_str(), strResponse.length(), 0);
         if (iResult == SOCKET_ERROR)
         {
             cout << "send failed: " << WSAGetLastError() << endl;
         }
-        cout << "Response sent" << endl;
+        cout << "strResponse sent" << endl;
     }
 };
 class CFile2 : public CClient
 {
 public:
-    void handleClient(SOCKET clientSocket, int iResult, string resource)
+    void handleClient(SOCKET clientSocket, int iResult, string strResource) override
     {
 
-        string response;
-        if (cache.count(resource) > 0)
+        string strResponse;
+        if (cache.count(strResource) > 0)
         {
-            response = cache[resource];
+            strResponse = cache[strResource];
         }
         else
         {
-            response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-            string htmlData = "";
+            strResponse = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+            string strHTMLData = "";
             ifstream MyFile("file2.html");
-            while (getline(MyFile, htmlData))
+            while (getline(MyFile, strHTMLData))
             {
-                response = response.append(htmlData);
+                strResponse = strResponse.append(strHTMLData);
             }
-            cache[resource] = response;
+            cache[strResource] = strResponse;
         }
-        iResult = send(clientSocket, response.c_str(), response.length(), 0);
+        iResult = send(clientSocket, strResponse.c_str(), strResponse.length(), 0);
         if (iResult == SOCKET_ERROR)
         {
             cout << "send failed: " << WSAGetLastError() << endl;
         }
-        cout << "Response sent" << endl;
+        cout << "strResponse sent" << endl;
     }
 };
 
 class CFile3 : public CClient
 {
 public:
-    void handleClient(SOCKET clientSocket, int iResult, string resource)
+    void handleClient(SOCKET clientSocket, int iResult, string strResource) override
     {
 
-        string response;
-        if (cache.count(resource) > 0)
+        string strResponse;
+        if (cache.count(strResource) > 0)
         {
-            response = cache[resource];
+            strResponse = cache[strResource];
         }
         else
         {
-            response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-            string htmlData = "";
+            strResponse = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+            string strHTMLData = "";
             ifstream MyFile("file3.html");
-            while (getline(MyFile, htmlData))
+            while (getline(MyFile, strHTMLData))
             {
-                response = response.append(htmlData);
+                strResponse = strResponse.append(strHTMLData);
             }
-            cache[resource] = response;
+            cache[strResource] = strResponse;
         }
-        iResult = send(clientSocket, response.c_str(), response.length(), 0);
+        iResult = send(clientSocket, strResponse.c_str(), strResponse.length(), 0);
         if (iResult == SOCKET_ERROR)
         {
             cout << "send failed: " << WSAGetLastError() << endl;
         }
-        cout << "Response sent" << endl;
+        cout << "strResponse sent" << endl;
     }
 };
 
 class CExit : public CClient
 {
 public:
-    void handleClient(SOCKET clientSocket, int iResult, string resource)
+    void handleClient(SOCKET clientSocket, int iResult, string strResource) override
     {
 
-        string response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-        string htmlData = "";
+        string strResponse = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+        string strHTMLData = "";
         ifstream MyFile("exit.html");
-        while (getline(MyFile, htmlData))
+        while (getline(MyFile, strHTMLData))
         {
-            response = response.append(htmlData);
+            strResponse = strResponse.append(strHTMLData);
         }
-        iResult = send(clientSocket, response.c_str(), response.length(), 0);
+        iResult = send(clientSocket, strResponse.c_str(), strResponse.length(), 0);
     }
 };
 
@@ -157,8 +160,8 @@ class CClientResponse : public CClient
 public:
     void processClient2(SOCKET clientSocket)
     {
-        char buffer[1024];
-        int iResult = recv(clientSocket, buffer, sizeof(buffer), 0);
+        char charBuffer[1024];
+        int iResult = recv(clientSocket, charBuffer, sizeof(charBuffer), 0);
         if (iResult == SOCKET_ERROR)
         {
             cout << "recv failed: " << WSAGetLastError() << endl;
@@ -166,45 +169,45 @@ public:
             return;
         }
 
-        buffer[iResult] = '\0';
+        charBuffer[iResult] = '\0';
 
-        char *token = strtok(buffer, " ");
+        char *token = strtok(charBuffer, " ");
         if (token != NULL)
         {
             token = strtok(NULL, " ");
             if (token != NULL)
             {
-                string resource(token);
-                if (resource == "/")
+                string strResource(token);
+                if (strResource == "/")
                 {
                     Home objHome;
-                    objHome.handleClient(clientSocket, iResult, resource);
+                    objHome.handleClient(clientSocket, iResult, strResource);
                 }
-                if (resource == "/file1")
+                if (strResource == "/file1")
                 {
                     CFile1 objHome;
-                    objHome.handleClient(clientSocket, iResult, resource);
+                    objHome.handleClient(clientSocket, iResult, strResource);
                 }
-                else if (resource == "/file2")
+                else if (strResource == "/file2")
                 {
                     CFile2 objHome;
-                    objHome.handleClient(clientSocket, iResult, resource);
+                    objHome.handleClient(clientSocket, iResult, strResource);
                 }
-                else if (resource == "/file3")
+                else if (strResource == "/file3")
                 {
                     CFile3 objHome;
-                    objHome.handleClient(clientSocket, iResult, resource);
+                    objHome.handleClient(clientSocket, iResult, strResource);
                 }
-                else if (resource == "/exit")
+                else if (strResource == "/exit")
                 {
                     CExit objHome;
-                    objHome.handleClient(clientSocket, iResult, resource);
+                    objHome.handleClient(clientSocket, iResult, strResource);
                 }
                 closesocket(clientSocket);
             }
         }
     }
-    void handleClient(SOCKET clientSocket, int iResult, string resource) { return; };
+    void handleClient(SOCKET clientSocket, int iResult, string strResource) { return; };
 };
 
 class CBase
@@ -236,7 +239,7 @@ public:
 private:
     WSADATA wsaData;
     SOCKET listenSocket;
-    int port;
+    int iPort;
     vector<thread> threads;
 
     void initialize();
@@ -314,7 +317,7 @@ public:
 
 CWebServer::CWebServer()
 {
-    port = 8080;
+    iPort = 8080;
 }
 
 CWebServer::~CWebServer()
@@ -378,7 +381,7 @@ void CWebServer::bindAndListen()
         sockaddr_in serverAddr;
         serverAddr.sin_family = AF_INET;
         serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-        serverAddr.sin_port = htons(port);
+        serverAddr.sin_port = htons(iPort);
 
         int iResult = bind(listenSocket, (SOCKADDR *)&serverAddr, sizeof(serverAddr));
         if (iResult == SOCKET_ERROR)
@@ -404,7 +407,7 @@ void CWebServer::bindAndListen()
         WSACleanup();
         exit(1);
     }
-    cout << "Web objServer running on port " << port << endl;
+    cout << "Web objServer running on iPort " << iPort << endl;
 }
 
 void CWebServer::acceptConnections()
