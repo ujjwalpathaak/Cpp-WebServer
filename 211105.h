@@ -1,3 +1,9 @@
+#include <bits/stdc++.h>
+#include <winsock2.h>
+#include "211117.h"
+#include "211418.h"
+using namespace std;
+
 class CBase
 {
 public:

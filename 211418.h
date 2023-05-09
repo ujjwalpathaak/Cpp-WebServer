@@ -1,3 +1,10 @@
+#include <bits/stdc++.h>
+#include <winsock2.h>
+using namespace std;
+
+#pragma comment(lib, "ws2_32.lib")
+map<string, string> cache;
+
 class CClient
 {
 public:

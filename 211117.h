@@ -1,3 +1,8 @@
+#include <bits/stdc++.h>
+#include <winsock2.h>
+
+using namespace std;
+
 class Base2
 {
 public:
